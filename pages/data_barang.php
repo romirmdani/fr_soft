@@ -135,8 +135,8 @@ $(".dataTables_filter input").on('keyup change', function() {
 <ol class="breadcrumb" style="margin-bottom:5px;border-radius:0; width: 100%; ">
  <li class="">Data Barang</li>
 </ol>
-<button type="button" class="btn btn-info" data-toggle="collapse" style="margin-bottom: 5px;" data-target="#demo">Filter</button>
-<div id="demo" class="collapse">
+<!-- <button type="button" class="btn btn-info" data-toggle="collapse" style="margin-bottom: 5px;" data-target="#demo">Filter</button> -->
+<div id="demo">
 <form class='filter-form'>
         <!--muncul jika ada pencarian (tombol reset pencarian)-->
                               <table class="table" style="border-bottom: 1px solid #ddd">
