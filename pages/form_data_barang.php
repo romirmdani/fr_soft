@@ -230,7 +230,7 @@ while ($chekgrp=mysql_fetch_array($qrychekgrp)){
 
 
   <?php
-$qrychekgrp=mysql_query("select  id_grp
+$qrychekgrp=mysql_query("select  ID_GRP
 from    (select * from dt_grp
          order by parent_id, id_grp) products_sorted,
         (select @pv := '$id') initialisation
@@ -239,7 +239,7 @@ and     length(@pv := concat(@pv, ',', id_grp)) OR ID_GRP ='$id'
 
 UNION
 
-select  id_grp
+select  ID_GRP
 from    (select * from dt_grp
          order by parent_id, id_grp) products_sorted,
         (select @pv := '$id') initialisation
@@ -249,7 +249,7 @@ and     length(@pv := concat(@pv, ',', id_grp)) OR ID_GRP ='$id'
 
 UNION
 
-select  id_grp
+select  ID_GRP
 from    (select * from dt_grp
          order by parent_id, id_grp) products_sorted,
         (select @pv := '$id') initialisation
