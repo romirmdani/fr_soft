@@ -31,9 +31,9 @@ function get_menu($data, $parent = 0) {
 $sql=mysql_query("select * from dt_grp")or die(mysql_error());
 
 while ($row = mysql_fetch_object($sql)) {
-         $data[$row->PARENT_ID][] = $row;
+         @$data[$row->PARENT_ID][] = $row;
       }
-      $menu = get_menu($data);
+      $menu = get_menu(@$data);
       echo "$menu"; 
 ?>
 <div id="ModalEdit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  data-keyboard="true" data-backdrop="true">

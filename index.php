@@ -123,9 +123,9 @@ if (isset($_SESSION["lastActivity"])) {
 <script>
      $(document).idle({
          onIdle: function(){
-             window.location="index.php?p=logout&$b[ID_USER]";                
+             window.location="index.php?p=logout";                
          },
-         idle: 300000
+         idle: 3000000
     });
 
   </script>

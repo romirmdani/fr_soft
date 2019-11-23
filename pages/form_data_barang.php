@@ -6,7 +6,7 @@
   $tampil1 = mysql_query("select * from dt_grp where ID_GRP='$id'");
   $data1 = mysql_fetch_array($tampil1);
 
-  
+  // echo "$id";
  
 $chek_id = mysql_query("SELECT a.id_grp FROM (SELECT * from dt_grp where PARENT_ID='$id') a
     UNION
@@ -14,6 +14,15 @@ $chek_id = mysql_query("SELECT a.id_grp FROM (SELECT * from dt_grp where PARENT_
   $chek_num=mysql_num_rows($chek_id);
 
 
+  $tree=mysql_query("SELECT GetFamilyTree(id_grp) AS ID_GRP FROM dt_grp where id_grp ='69'");
+  $tree_num=mysql_fetch_array($tree);
+
+  $idku=$tree_num['ID_GRP'];
+
+
+
+
+// echo "$tree_num[ID_GRP],<br>";
 
   $chek_nama_barang = mysql_query("select * from dt_brg where ID_GRP='$id'");
   $chek_nama_barang_ada=mysql_num_rows($chek_nama_barang);
@@ -74,11 +83,11 @@ $(".dataTables_filter input").on('keyup change', function() {
 
  <button type="button" class="btn btn-info detail_grp" id='<?php echo $data1['ID_GRP']; ?>' data-toggle="modal" data-target="#Modal_barang" ><b>Edit Group</b></button>
 
-<button type="button" class="btn btn-info" data-toggle="collapse"  data-target="#demo"><b>Filter</b></button>
+<!-- <button type="button" class="btn btn-info" data-toggle="collapse"  data-target="#demo"><b>Filter</b></button> -->
 
 </p>
 <!---colapse filter-->
-<div id="demo" class="collapse">
+<div id="demo" class="">
 <form class='filter-form'>
         <!--muncul jika ada pencarian (tombol reset pencarian)-->
                               <table class="table" style="border-bottom: 1px solid #ddd">
@@ -105,7 +114,7 @@ $(".dataTables_filter input").on('keyup change', function() {
     <div class="modal-content">
       <div class="modal-header" style="background:#9cd9e6;">
         <button type="button" class="close" onclick="" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title" style="text-align: center;">Tambah Group Barang</h4>
+        <h4 class="modal-title" style="text-align: center;">Tambah Group</h4>
       </div>
       <div class="modal-body">
         <div class="pesan"></div>
@@ -114,7 +123,7 @@ $(".dataTables_filter input").on('keyup change', function() {
           <td style="font-size: 15px; font-weight: bold;">Nama Group</td>
           <td>
             <input type="text" name="id_grp" class="form-control" disabled="" id="id_grp" onkeyup="this.value = this.value.toUpperCase()" autocomplete="off" value="<?php echo $data1['NAMA_GRP'];?>">
-            <input type="text" name="parent_id" value="<?php echo $data1['ID_GRP'];?>">
+            <input type="hidden" name="parent_id" value="<?php echo $data1['ID_GRP'];?>">
             <div id="result" style="color: red;"></div>
           </td>
         </tr> 
@@ -155,28 +164,50 @@ $(".dataTables_filter input").on('keyup change', function() {
   </thead>
   <tbody>
 
-<?php
+
+
+  <?php
+
  if ($chek_num == '0' AND $chek_nama_barang_ada == '0') {
     // echo "Bisa tambah group dan data barang";
 
   } else if ( $chek_num > 0 ) {
  // echo "tidak bisa tambah barang tapi bisa tambah group";
  
-while($tampil_id=mysql_fetch_array($chek_id)){
- $tsss=$tampil_id['ID_GRP'];
- $barang=mysql_query("SELECT a.*, b.* FROM dt_brg a JOIN dt_grp b ON a.ID_GRP=b.ID_GRP WHERE a.ID_GRP IN($tsss)");
- $no=1;
-while ($tampil_barang=mysql_fetch_array($barang)){
-  // echo "barang adalah : $tampil_barang[NAMA_BRG] - $tampil_barang[ID_GRP]<br>";
-?>
-   <tr>
+  $qrychekgrp=mysql_query("select  id_grp
+from    (select * from dt_grp
+         order by parent_id, id_grp) products_sorted,
+        (select @pv := '$id') initialisation
+where   find_in_set(parent_id, @pv)
+and     length(@pv := concat(@pv, ',', id_grp)) OR ID_GRP ='$id'
+
+UNION
+
+select  id_grp
+from    (select * from dt_grp
+         order by parent_id, id_grp) products_sorted,
+        (select @pv := '$id') initialisation
+where   find_in_set(parent_id, @pv)
+and     length(@pv := concat(@pv, ',', id_grp)) OR ID_GRP ='$id'");
+
+while ($chekgrp=mysql_fetch_array($qrychekgrp)){
+
+  $grp=$chekgrp['ID_GRP'];
+
+  $query=mysql_query("SELECT a.NAMA_BRG,a.ID_GRP,a.KET_BRG,b.NAMA_GRP,b.ID_GRP FROM dt_brg a JOIN dt_grp b ON a.ID_GRP=b.ID_GRP WHERE a.ID_GRP  IN ($grp)")or die(mysql_error());
+  $no=1;
+  while ($data = mysql_fetch_array($query)){
+    ?>
+    <tr>
       <td><?php echo $no;?></td> 
-      <td><?php echo $tampil_barang['NAMA_BRG'];?></td>
-      <td><?php echo $tampil_barang['NAMA_GRP'];?></td>
-      <td><?php echo $tampil_barang['KET_BRG'];?></td>
-    </tr>
-<?php
-}
+      <td><?php echo $data['NAMA_BRG'];?></td>
+      <td><?php echo $data['NAMA_GRP'];?></td>
+      <td><?php echo $data['KET_BRG'];?></td>
+
+      <?php
+      $no++;
+    }
+
 }
 
    
@@ -200,7 +231,39 @@ while ($tampil_barang=mysql_fetch_array($barang)){
 
 
   <?php
-  $query=mysql_query("SELECT a.*, b.* FROM dt_brg a JOIN dt_grp b ON a.ID_GRP=b.ID_GRP WHERE a.ID_GRP='$id'")or die(mysql_error());
+$qrychekgrp=mysql_query("select  id_grp
+from    (select * from dt_grp
+         order by parent_id, id_grp) products_sorted,
+        (select @pv := '$id') initialisation
+where   find_in_set(parent_id, @pv)
+and     length(@pv := concat(@pv, ',', id_grp)) OR ID_GRP ='$id'
+
+UNION
+
+select  id_grp
+from    (select * from dt_grp
+         order by parent_id, id_grp) products_sorted,
+        (select @pv := '$id') initialisation
+where   find_in_set(parent_id, @pv)
+and     length(@pv := concat(@pv, ',', id_grp)) OR ID_GRP ='$id'
+
+
+UNION
+
+select  id_grp
+from    (select * from dt_grp
+         order by parent_id, id_grp) products_sorted,
+        (select @pv := '$id') initialisation
+where   find_in_set(parent_id, @pv)
+and     length(@pv := concat(@pv, ',', id_grp)) OR ID_GRP ='$id'
+
+");
+
+while ($chekgrp=mysql_fetch_array($qrychekgrp)){
+
+  $grp=$chekgrp['ID_GRP'];
+
+  $query=mysql_query("SELECT a.NAMA_BRG,a.ID_GRP,a.KET_BRG,b.NAMA_GRP,b.ID_GRP FROM dt_brg a JOIN dt_grp b ON a.ID_GRP=b.ID_GRP WHERE a.ID_GRP  IN ($grp)")or die(mysql_error());
   $no=1;
   while ($data = mysql_fetch_array($query)){
     ?>
@@ -213,6 +276,8 @@ while ($tampil_barang=mysql_fetch_array($barang)){
       <?php
       $no++;
     }
+
+  }
     ?>
   </tr>
 </tbody>
@@ -223,6 +288,10 @@ while ($tampil_barang=mysql_fetch_array($barang)){
   }
 
   ?>
+  </tr>
+</tbody>
+</table>
+</div>
 
 <script>
   function SimpanSupGroup(){

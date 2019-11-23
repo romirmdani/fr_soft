@@ -6,17 +6,23 @@ $data1 = mysql_fetch_array($tampil1);
 ?>
 
 <?php
-$cekdata_grp="select ID_GRP from dt_grp where PARENT_ID='$id'";
+$cekdata_grp="select * from dt_grp where ID_GRP='$data1[PARENT_ID]'";
 $ada_parent=mysql_query($cekdata_grp) or die(mysql_error());
 $cek_grp=mysql_num_rows($ada_parent);
+$parent_grp=mysql_fetch_array($ada_parent);
+
+
+
+
+
 
 $cekdata_brg="select ID_GRP from dt_brg where ID_GRP='$id'";
 $ada_barang=mysql_query($cekdata_brg) or die(mysql_error());
 $cek_brg=mysql_num_rows($ada_barang);
 
-echo "id : $id<br>";
-echo "ada group : $cek_grp<br>";
-echo "ada barang : $cek_brg";
+// echo "id : $id<br>";
+// echo "ada group : $cek_grp<br>";
+// echo "ada barang : $cek_brg";
 ?>
 
 <!-- <form method="post" action="index_user.php?p=proses_insert_aktifitas" enctype="multipart/form-data" > -->
@@ -39,6 +45,13 @@ echo "ada barang : $cek_brg";
             <td><?php echo $data1['NAMA_GRP'];?></td>
           </tr>
           <tr>
+            <td>Sub Group Dari</td>
+            <td>:</td>
+             <td>
+            <?php echo "$parent_grp[NAMA_GRP]"; ?>
+          </td>
+          </tr>
+          <tr>
             <td>Keterangan</td>
             <td>:</td>
             <td><?php echo $data1['KET_GRP'];?></td>
@@ -50,10 +63,10 @@ echo "ada barang : $cek_brg";
       <!-- footer modal -->
       <div class="modal-footer" style="background: #eee">
         <!-- <input type="submit" class="btn btn-success btn-md" value="Edit" name="tambah"> -->
-        <input type="hidden" name="id" id="ID_CST" value="<?php echo $data1['ID_CST']; ?>">
+        <input type="hidden" name="id" id="ID_GRP" value="<?php echo $data1['ID_GRP']; ?>">
         <input type="hidden" name="ada_akts" id="ada_akts" value="<?php echo $aktifitas; ?>">
         <input type="hidden" name="ada_install" id="ada_install" value="<?php echo $install; ?>">
-        <a href="#" class='btn btn-primary open_modal_edit_cst btn-load' id='<?php echo $data1['ID_CST']; ?>' title="Edit">Edit</a>
+        <a href="#" class='btn btn-primary open_modal_edit_grp btn-load' id='<?php echo $data1['ID_GRP']; ?>' title="Edit">Edit</a>
         <!-- <a href="index_user.php?p=hapus_customer&ID_CST=<?php echo $data1['ID_CST']; ?>" class="btn btn-danger btn-md btn-load" title="Hapus" onclick="return confirm('Yakin mau di hapus?');">Hapus</a> -->
 
         <input type="button" value="Hapus" id='<?php echo $data1['ID_CST']; ?>' class="btn btn-danger btn-md hapus_customer btn-load">
@@ -67,12 +80,12 @@ echo "ada barang : $cek_brg";
 
 <script type="text/javascript">
   $(document).ready(function (){
-    $(".open_modal_edit_cst").click(function (e){
+    $(".open_modal_edit_grp").click(function (e){
       var m = $(this).attr("id");
       $.ajax({
-        url: "pages/edit_customer.php",
+        url: "pages/edit_group.php",
         type: "GET",
-        data : {ID_CST: m,},
+        data : {ID_GRP: m,},
         success: function (ajaxData){
           $("#ModalEdit").html(ajaxData);
           $("#ModalEdit").modal('show',{backdrop: 'true'});
