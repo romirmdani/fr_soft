@@ -32,7 +32,7 @@ $cek_brg=mysql_num_rows($ada_barang);
       <div class="modal-content">
         <!-- heading modal -->
         <div class="modal-header" style="background:#c1e2b3;">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <button type="button" class="close"  data-dismiss="modal">&times;</button>
           <h4 class="modal-title" style="text-align: center;">Detail Group</h4>
         </div>
         <!-- body modal -->
@@ -157,7 +157,13 @@ if (!hapus) {
 }
 });
 });
+
+
+
+
 </script>
+
+
 
 
 

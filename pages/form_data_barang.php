@@ -14,7 +14,7 @@ $chek_id = mysql_query("SELECT a.id_grp FROM (SELECT * from dt_grp where PARENT_
   $chek_num=mysql_num_rows($chek_id);
 
 
-  $tree=mysql_query("SELECT GetFamilyTree(id_grp) AS ID_GRP FROM dt_grp where id_grp ='69'");
+  $tree=mysql_query("SELECT GetFamilyTree(id_grp) AS ID_GRP FROM dt_grp where id_grp ='$id'");
   $tree_num=mysql_fetch_array($tree);
 
   $idku=$tree_num['ID_GRP'];
