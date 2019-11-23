@@ -173,7 +173,7 @@ $(".dataTables_filter input").on('keyup change', function() {
   } else if ( $chek_num > 0 ) {
  // echo "tidak bisa tambah barang tapi bisa tambah group";
  
-  $qrychekgrp=mysql_query("select  id_grp
+  $qrychekgrp=mysql_query("select  ID_GRP
 from    (select * from dt_grp
          order by parent_id, id_grp) products_sorted,
         (select @pv := '$id') initialisation
@@ -182,7 +182,7 @@ and     length(@pv := concat(@pv, ',', id_grp)) OR ID_GRP ='$id'
 
 UNION
 
-select  id_grp
+select  ID_GRP
 from    (select * from dt_grp
          order by parent_id, id_grp) products_sorted,
         (select @pv := '$id') initialisation
@@ -191,7 +191,7 @@ and     length(@pv := concat(@pv, ',', id_grp)) OR ID_GRP ='$id'");
 
 while ($chekgrp=mysql_fetch_array($qrychekgrp)){
 
-  $grp=$chekgrp['id_grp'];
+  $grp=$chekgrp['ID_GRP'];
 
   $query=mysql_query("SELECT a.NAMA_BRG,a.ID_GRP,a.KET_BRG,b.NAMA_GRP,b.ID_GRP FROM dt_brg a JOIN dt_grp b ON a.ID_GRP=b.ID_GRP WHERE a.ID_GRP  IN ($grp)")or die(mysql_error());
   $no=1;
