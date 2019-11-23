@@ -14,10 +14,10 @@ $chek_id = mysql_query("SELECT a.id_grp FROM (SELECT * from dt_grp where PARENT_
   $chek_num=mysql_num_rows($chek_id);
 
 
-  $tree=mysql_query("SELECT GetFamilyTree(id_grp) AS ID_GRP FROM dt_grp where id_grp ='$id'");
-  $tree_num=mysql_fetch_array($tree);
+  // $tree=mysql_query("SELECT GetFamilyTree(id_grp) AS ID_GRP FROM dt_grp where id_grp ='$id'");
+  // $tree_num=mysql_fetch_array($tree);
 
-  $idku=$tree_num['ID_GRP'];
+  // $idku=$tree_num['ID_GRP'];
 
 
 
@@ -30,8 +30,7 @@ $chek_id = mysql_query("SELECT a.id_grp FROM (SELECT * from dt_grp where PARENT_
  // echo "ada sub group = $chek_num<br>";
 
 
- //query search
-
+ //query search dataTables
   ?>
   <script>
   $(document).ready(function() {
@@ -192,7 +191,7 @@ and     length(@pv := concat(@pv, ',', id_grp)) OR ID_GRP ='$id'");
 
 while ($chekgrp=mysql_fetch_array($qrychekgrp)){
 
-  $grp=$chekgrp['ID_GRP'];
+  $grp=$chekgrp['id_grp'];
 
   $query=mysql_query("SELECT a.NAMA_BRG,a.ID_GRP,a.KET_BRG,b.NAMA_GRP,b.ID_GRP FROM dt_brg a JOIN dt_grp b ON a.ID_GRP=b.ID_GRP WHERE a.ID_GRP  IN ($grp)")or die(mysql_error());
   $no=1;
