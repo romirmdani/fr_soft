@@ -6,14 +6,10 @@ $data1 = mysql_fetch_array($tampil1);
 ?>
 
 <?php
-$cekdata_grp="select * from dt_grp where ID_GRP='$data1[PARENT_ID]'";
+$cekdata_grp="select * from dt_grp where PARENT_ID='$data1[ID_GRP]'";
 $ada_parent=mysql_query($cekdata_grp) or die(mysql_error());
 $cek_grp=mysql_num_rows($ada_parent);
 $parent_grp=mysql_fetch_array($ada_parent);
-
-
-
-
 
 
 $cekdata_brg="select ID_GRP from dt_brg where ID_GRP='$id'";
@@ -64,12 +60,11 @@ $cek_brg=mysql_num_rows($ada_barang);
       <div class="modal-footer" style="background: #eee">
         <!-- <input type="submit" class="btn btn-success btn-md" value="Edit" name="tambah"> -->
         <input type="hidden" name="id" id="ID_GRP" value="<?php echo $data1['ID_GRP']; ?>">
-        <input type="hidden" name="ada_akts" id="ada_akts" value="<?php echo $aktifitas; ?>">
-        <input type="hidden" name="ada_install" id="ada_install" value="<?php echo $install; ?>">
+        <input type="hidden" name="ada_parent" id="ada_parent" value="<?php echo $cek_grp; ?>">
+        <input type="hidden" name="ada_barang" id="ada_barang" value="<?php echo $cek_brg; ?>">
         <a href="#" class='btn btn-primary open_modal_edit_grp btn-load' id='<?php echo $data1['ID_GRP']; ?>' title="Edit">Edit</a>
-        <!-- <a href="index_user.php?p=hapus_customer&ID_CST=<?php echo $data1['ID_CST']; ?>" class="btn btn-danger btn-md btn-load" title="Hapus" onclick="return confirm('Yakin mau di hapus?');">Hapus</a> -->
 
-        <input type="button" value="Hapus" id='<?php echo $data1['ID_CST']; ?>' class="btn btn-danger btn-md hapus_customer btn-load">
+        <input type="button" value="Hapus" id='<?php echo $data1['ID_GRP']; ?>' class="btn btn-danger btn-md hapus_grp btn-load">
         
         
       </div>
@@ -108,7 +103,7 @@ $cek_brg=mysql_num_rows($ada_barang);
 
 <script type="text/javascript">
  $(document).ready(function (){
-  $(".hapus_customer").click(function (e){
+  $(".hapus_grp").click(function (e){
 
 
    var jawab = confirm("Yakin ingin menghapus ?");
@@ -120,34 +115,34 @@ if (!hapus) {
 
 
 
- var ada_akts = document.getElementById("ada_akts").value;
- var ada_install = document.getElementById("ada_install").value;
- if(ada_akts > 0){
+ var ada_prnt = document.getElementById("ada_parent").value;
+ var ada_brg = document.getElementById("ada_barang").value;
+ if(ada_prnt > 0){
       // alert("Nama Customer Harus Di isi detail");
       swal({
-        title :'Gagal',
-        text : 'Nama Customer <?php echo $data1['NAMA_CST'];?> Sudah digunakan di aktifitas',
-        type: 'info'
+        title :'Harus dari Group Terakhir',
+        text : '',
+        type: 'error'
       })
       return false;
 
-    } else if (ada_install > 0){
+    } else if (ada_brg > 0){
      swal({
-      title :'Nama Customer <?php echo $data1['NAMA_CST'];?> Sudah ada di Install',
+      title :'Group Sudah ada Data Barang',
       text : '',
-      type: 'info'
+      type: 'error'
     })
      return false;
    } else {
-     var namacst = $('#ID_CST').val();
+     var ID_GRP = $('#ID_GRP').val();
      $.ajax({
-      url: "pages/hapus_customer.php",
+      url: "pages/hapus_grp.php",
       type: "GET",
-      data: 'ID_CST='+namacst,
+      data: 'ID_GRP='+ID_GRP,
       success: function() {
-        $('.tampildata').load("pages/tampil_tabel_customer.php");
+        // $('.tampildata').load("pages/form_data_barang.php");
         alert("Customer Berhasil di Hapus");
-        window.location = "http://localhost/romi/index.php?p=customer";
+        window.location = "http://localhost/fr_soft/index.php?p=data_barang";
       }
     });
    }
@@ -157,10 +152,6 @@ if (!hapus) {
 }
 });
 });
-
-
-
-
 </script>
 
 
